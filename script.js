@@ -20,17 +20,28 @@ for (let i = 0; i != buttons.length; ++i) {
   let button = buttons[i];
 
   button.addEventListener("click", function () {
-    const description = document.getElementById(
-      "characterDescriptionContainer"
-    );
-    const charactersTableContainer = document.getElementById(
-      "charactersTableContainer"
-    );
-
+    // get characterId
     let characterId = this.getAttribute("data-characterId");
-    updateDescriptionPage(characterId);
-    charactersTableContainer.style.display = "none";
-    description.style.display = "block";
+
+    // TODO: before request validate  characterId is a valid integer;
+    getJsonData(REST_DATA_SOURCE + `/${characterId}`).then((jsonData) => {
+      // set new character description
+      const characterDescription = document.getElementById(
+        "characterDescription"
+      );
+      characterDescription.innerText = JSON.stringify(jsonData);
+
+      const characterDescriptionContainer = document.getElementById(
+        "characterDescriptionContainer"
+      );
+      const charactersTableContainer = document.getElementById(
+        "charactersTableContainer"
+      );
+
+      // change visibility of div elements
+      charactersTableContainer.style.display = "none";
+      characterDescriptionContainer.style.display = "block";
+    });
   });
 }
 
@@ -40,11 +51,13 @@ let backToCharactersTableButton = document.getElementById(
 );
 
 backToCharactersTableButton.addEventListener("click", function () {
-  const description = document.getElementById("characterDescriptionContainer");
+  const characterDescriptionContainer = document.getElementById(
+    "characterDescriptionContainer"
+  );
   const charactersTableContainer = document.getElementById(
     "charactersTableContainer"
   );
-  description.style.display = "none";
+  characterDescriptionContainer.style.display = "none";
   charactersTableContainer.style.display = "block";
 });
 
@@ -114,12 +127,6 @@ async function updateTables() {
       characterAvatars[i].src = image_src;
     }
   }
-}
-
-// update description page
-function updateDescriptionPage(characterId) {
-  const characterDescription = document.getElementById("characterDescription");
-  characterDescription.innerText = "Placeholder for ID: " + characterId;
 }
 
 async function getJsonData(url) {
