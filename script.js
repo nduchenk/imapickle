@@ -1,4 +1,3 @@
-// const INITIAL_CHARACTERS_TABLE_LENGTH = 20;
 // const STATIC_DATA_LENGTH = 20;
 // const STATIC_DATA_SOURCE = Array.from(Array(STATIC_DATA_LENGTH).keys()).map(
 //   (id) => {
@@ -7,7 +6,7 @@
 //       name: "Pickle" + id,
 //       status: "Marinated",
 //       species: "Cucumber",
-//       image: "http://localhost:8888/image",
+//       image: "http://127.0.0.1:8888/image/" + id,
 //     };
 //   }
 // );
@@ -64,6 +63,7 @@ backToCharactersTableButton.addEventListener("click", function () {
 async function updateTables() {
   const jsonData = await getJsonData(REST_DATA_SOURCE);
   const results = jsonData["results"];
+  // const results = STATIC_DATA_SOURCE;
 
   if (results === null || !(results instanceof Array)) {
     console.error("Received wrong data type: " + typeof results);
