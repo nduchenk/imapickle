@@ -13,12 +13,8 @@ body {
 }
 
 .characterAvatar {
-    background-image: url("resources/pickle.webp");
-    background-color: transparent;
-    background-size: contain;
-    background-repeat: no-repeat;
     width: 350px;
-    width: 350px;
+    height: 350px;
 }
 
 #characterDescriptionContainer {
