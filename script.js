@@ -21,7 +21,7 @@ function Character(characterId, name, species, image_src, image_alt, status) {
   this.image_alt = image_alt || "Placeholder for character Picture";
   this.status = status || "";
 
-  this.createCellNode = function () {
+  this.createCharacterNode = function () {
     let self = this;
     // cell
     const characterCell = document.createElement("td");
@@ -51,8 +51,6 @@ function Character(characterId, name, species, image_src, image_alt, status) {
       if (!Number.isInteger(numCharacterId)) {
         return;
       }
-
-      console.log("HA" + characterId);
 
       getJsonData(REST_DATA_SOURCE + `/${characterId}`).then((jsonData) => {
         // set new character description
@@ -118,8 +116,8 @@ function setInitialTablePattern() {
       table.appendChild(row);
     }
     const cell = new Character();
-    const cellNode = cell.createCellNode();
-    row.appendChild(cellNode);
+    const characterNode = cell.createCharacterNode();
+    row.appendChild(characterNode);
     CHARACTERS_TABLE.push(cell);
   }
 
@@ -142,6 +140,22 @@ function setBackButton() {
     characterDescriptionContainer.style.display = "none";
     charactersTableContainer.style.display = "block";
   });
+}
+
+async function getJsonData(url) {
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
+
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    console.error(error.message);
+    return null;
+  }
 }
 
 async function updateTables() {
@@ -211,22 +225,6 @@ async function updateTables() {
       characterAvatars[i].src = image_src;
       characterAvatars[i].alt = "Profile picture of " + name;
     }
-  }
-}
-
-async function getJsonData(url) {
-  try {
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error(`Response status: ${response.status}`);
-    }
-
-    const json = await response.json();
-    return json;
-  } catch (error) {
-    console.error(error.message);
-    return null;
   }
 }
 
