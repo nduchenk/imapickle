@@ -1,5 +1,7 @@
 body {
     background-color: #532a7f;
+    margin: 0;
+    padding: 0;
 }
 
 #charactersTable {
