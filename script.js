@@ -125,6 +125,7 @@ async function updateTables() {
       );
     } else {
       characterAvatars[i].src = image_src;
+      characterAvatars[i].alt = "Profile picture of " + name;
     }
   }
 }
