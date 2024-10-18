@@ -1,3 +1,4 @@
+"use strict";
 const STATIC_DATA_LENGTH = 20;
 // const STATIC_DATA_SOURCE = Array.from(Array(STATIC_DATA_LENGTH).keys()).map(
 //   (id) => {
