@@ -1,6 +1,9 @@
 "use strict";
 
-const CHARACTERS_TABLE = new CharactersTable(4, 5, Character);
+const CHARACTERS_TABLE = new CharactersTable(
+  20 /*columns*/,
+  Character /*cell constructor*/
+);
 
 // attach table to its parent node.
 (function () {
@@ -26,11 +29,7 @@ const CHARACTERS_TABLE = new CharactersTable(4, 5, Character);
   });
 })();
 
-getJsonData(REST_DATA_SOURCE)
-  .then((response) => {
-    const results = response["results"];
-    CHARACTERS_TABLE.updateCells(results);
-  })
-  .catch((err) => {
-    console.error(`Error: ${err}`);
-  });
+getJsonData(REST_DATA_SOURCE).then((response) => {
+  const results = response["results"];
+  CHARACTERS_TABLE.updateCells(results);
+});
