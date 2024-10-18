@@ -10,7 +10,7 @@ const STATIC_DATA_LENGTH = 20;
 //     };
 //   }
 // );
-const CHARACTERS_TABLE = new Array(STATIC_DATA_LENGTH);
+const CHARACTERS_TABLE = new Array();
 const REST_DATA_SOURCE = "https://rickandmortyapi.com/api/character";
 
 function setInitialTablePattern() {
@@ -74,63 +74,24 @@ async function updateTables() {
     return;
   }
 
-  // Hmmmm... Seems the order is always same and follows tree logic.
-  // Or it is better to select do select in a foor loop ???
-  let characterSpecies = Array.from(
-    document.getElementsByClassName("characterSpecies")
-  );
-  let characterStatus = Array.from(
-    document.getElementsByClassName("characterStatus")
-  );
-  let chracterButtons = Array.from(
-    document.getElementsByClassName("characterButton")
-  );
-  let characterAvatars = Array.from(
-    document.getElementsByClassName("characterAvatar")
-  );
-
-  // TODO: refactor this spaghetti
   for (let i = 0; i != results.length; ++i) {
     let character = results[i];
+    let cell = CHARACTERS_TABLE[i];
 
-    let characterId = character["id"];
+    let characterId = character.id;
     if (characterId === null || characterId === undefined) {
       console.error("Character `id` is: ", typeof characterId);
       continue;
     }
 
-    let characterButton = chracterButtons[i];
-    characterButton.setAttribute("data-characterId", characterId);
-    let name = character["name"];
-    if (name === null || name === undefined) {
-      console.warn(`Name for id: ${characterId} is: ` + typeof name);
-    } else {
-      characterButton.innerText = name;
-    }
-
-    let status = character["status"];
-    if (status === null || status === undefined) {
-      console.warn(`Status for id: ${characterId} is: ` + typeof status);
-    } else {
-      characterStatus[i].innerText = status;
-    }
-
-    let species = character["species"];
-    if (species === null || species === undefined) {
-      console.warn(`Species for id: ${characterId} is: ` + typeof species);
-    } else {
-      characterSpecies[i].innerText = species;
-    }
-
-    let image_src = character["image"];
-    if (image_src === null || image_src === undefined) {
-      console.warn(
-        `Image source for id: ${characterId} is: ` + typeof image_src
-      );
-    } else {
-      characterAvatars[i].src = image_src;
-      characterAvatars[i].alt = "Profile picture of " + name;
-    }
+    // TODO: this might get wrong very easy, create spearate class for name, species, status, image and add type checks ?
+    cell.setCharacterProfile(
+      characterId,
+      character.name,
+      character.species,
+      character.status,
+      character.image
+    );
   }
 }
 

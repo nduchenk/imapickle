@@ -1,3 +1,4 @@
+"use strict";
 (function (global) {
   var UNIQ_OBJECT_ID = 0;
 
@@ -18,6 +19,90 @@
     this.image_src = image_src || "";
     this.image_alt = image_alt || "Placeholder for character Picture";
     this.status = status || "";
+
+    this.setCharacterProfile = function (
+      characterId,
+      name,
+      species,
+      status,
+      image_src
+    ) {
+      // order is important: `setImage` will use `self.name` to set up proper `alt`
+      let self = this;
+      self.setCharacterId(characterId);
+      self.setName(name);
+      self.setSpecies(species);
+      self.setStatus(status);
+      self.setAvatar(image_src);
+    };
+
+    this.setCharacterId = function (characterId) {
+      // Takes any value as `characterId` it is caller responsibility to check characterId;
+      let self = this;
+      self.characterId = characterId;
+    };
+
+    this.setName = function (name) {
+      let self = this;
+
+      if (name === null || name === undefined) {
+        console.warn(`Name for id: ${self.characterId} is: ` + typeof name);
+        return;
+      }
+
+      self.name = name;
+      const button = document.getElementById(CLASS_BUTTON + self.objectId);
+      button.innerText = name;
+    };
+
+    this.setSpecies = function (species) {
+      let self = this;
+
+      if (species === null || species === undefined) {
+        console.warn(
+          `Species for id: ${self.characterId} is: ` + typeof species
+        );
+        return;
+      }
+
+      self.species = species;
+      const characterSpecies = document.getElementById(
+        CLASS_SPECIES + self.objectId
+      );
+      characterSpecies.innerText = species;
+    };
+
+    this.setStatus = function (status) {
+      let self = this;
+
+      if (status === null || status === undefined) {
+        console.warn(`Status for id: ${self.characterId} is: ` + typeof status);
+        return;
+      }
+
+      self.status = status;
+      const characterStatus = document.getElementById(
+        CLASS_STATUS + self.objectId
+      );
+      characterStatus.innerText = status;
+    };
+
+    this.setAvatar = function (image_src) {
+      let self = this;
+      if (image_src === null || image_src === undefined) {
+        console.warn(
+          `Image source for id: ${self.characterId} is: ` + typeof image_src
+        );
+        return;
+      }
+
+      self.image_src = image_src;
+      const characterAvatar = document.getElementById(
+        CLASS_IMAGE + self.objectId
+      );
+      characterAvatar.src = image_src;
+      characterAvatar.alt = "Profile picture of " + self.name;
+    };
 
     this.createCharacterNode = function () {
       let self = this;
@@ -96,3 +181,6 @@
 
   global.Character = Character;
 })(window);
+
+// TODO: set functions into a prototype so it is not an newly created object for each instance of Character
+// TODO: check what kind of fun will happen if `createCharacterNode` called multiple times.
