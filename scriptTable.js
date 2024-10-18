@@ -7,6 +7,8 @@
     this.tableId = ++UNIQ_OBJECT_ID;
     this.content = Array();
     this.cell_constructor = cell_constructor;
+    this.rows_num = rows_num;
+    this.columns_num = columns_num;
 
     const table = document.createElement("table");
     table.classList.add(CLASS_TABLE);
@@ -19,9 +21,9 @@
       return row;
     }
 
-    for (let i = 0; i != rows_num; ++i) {
+    for (let i = 0; i != this.rows_num; ++i) {
       let row = createRow();
-      for (let j = 0; j != columns_num; ++j) {
+      for (let j = 0; j != this.columns_num; ++j) {
         const cell = new cell_constructor();
         row.appendChild(cell.createCharacterNode());
         this.content.push(cell);
@@ -29,6 +31,35 @@
       this.node.appendChild(row);
     }
   }
+
+  CharactersTable.prototype.updateCells = function (data) {
+    let self = this;
+
+    if (data === null || !(data instanceof Array)) {
+      console.error("Received wrong data type: " + typeof results);
+      return;
+    }
+
+    for (let i = 0; i != data.length; ++i) {
+      let character = data[i];
+      let cell = self.content[i];
+
+      let characterId = character.id;
+      if (characterId === null || characterId === undefined) {
+        console.error("Character `id` is: ", typeof characterId);
+        continue;
+      }
+
+      // TODO: this might get wrong very easy, create spearate class for name, species, status, image and add type checks ?
+      cell.setCharacterProfile(
+        characterId,
+        character.name,
+        character.species,
+        character.status,
+        character.image
+      );
+    }
+  };
 
   global.CharactersTable = CharactersTable;
 })(window);
