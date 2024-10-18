@@ -1,40 +1,9 @@
 "use strict";
-const STATIC_DATA_LENGTH = 20;
-const CHARACTERS_TABLE = new Array();
-const REST_DATA_SOURCE = "https://rickandmortyapi.com/api/character";
 
-function setInitialTablePattern() {
-  function createTable() {
-    const table = document.createElement("table");
-    table.classList.add("charactersTable");
-    return table;
-  }
+const CHARACTERS_TABLE = new CharactersTable(5, 4, Character);
 
-  function createRow() {
-    const row = document.createElement("tr");
-    row.classList.add("charactersRow");
-    return row;
-  }
-
-  const tableContainer = document.getElementById("charactersTableContainer");
-  const table = createTable();
-
-  let row = createRow();
-
-  // create table with 5 cells in each row
-  for (let i = 0; i != STATIC_DATA_LENGTH; ++i) {
-    if (i % 5 === 0) {
-      row = createRow();
-      table.appendChild(row);
-    }
-    const cell = new Character();
-    const characterNode = cell.createCharacterNode();
-    row.appendChild(characterNode);
-    CHARACTERS_TABLE.push(cell);
-  }
-
-  tableContainer.appendChild(table);
-}
+const tableContainer = document.getElementById("charactersTableContainer");
+tableContainer.appendChild(CHARACTERS_TABLE.node);
 
 function setBackButtonOnDescriptionView() {
   // Set up back to table button.
@@ -66,7 +35,8 @@ async function updateTables() {
 
   for (let i = 0; i != results.length; ++i) {
     let character = results[i];
-    let cell = CHARACTERS_TABLE[i];
+    let cell = CHARACTERS_TABLE.content[i];
+    console.log(cell);
 
     let characterId = character.id;
     if (characterId === null || characterId === undefined) {
@@ -88,6 +58,5 @@ async function updateTables() {
 // kind of main function ;)
 (async () => {
   setBackButtonOnDescriptionView();
-  setInitialTablePattern();
   await updateTables();
 })();
