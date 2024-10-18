@@ -46,7 +46,7 @@ function setInitialTablePattern() {
   tableContainer.appendChild(table);
 }
 
-function setBackButton() {
+function setBackButtonOnDescriptionView() {
   // Set up back to table button.
   let backToCharactersTableButton = document.getElementById(
     "backToCharactersTableButton"
@@ -152,7 +152,7 @@ async function getJsonData(url) {
 
 // kind of main function ;)
 (async () => {
-  setBackButton();
+  setBackButtonOnDescriptionView();
   setInitialTablePattern();
   await updateTables();
 })();
