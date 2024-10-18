@@ -1,15 +1,5 @@
+"use strict";
 const STATIC_DATA_LENGTH = 20;
-// const STATIC_DATA_SOURCE = Array.from(Array(STATIC_DATA_LENGTH).keys()).map(
-//   (id) => {
-//     return {
-//       id: id,
-//       name: "Pickle" + id,
-//       status: "Marinated",
-//       species: "Cucumber",
-//       image: "http://127.0.0.1:8888/image/" + id,
-//     };
-//   }
-// );
 const CHARACTERS_TABLE = new Array();
 const REST_DATA_SOURCE = "https://rickandmortyapi.com/api/character";
 
@@ -92,22 +82,6 @@ async function updateTables() {
       character.status,
       character.image
     );
-  }
-}
-
-async function getJsonData(url) {
-  try {
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error(`Response status: ${response.status}`);
-    }
-
-    const json = await response.json();
-    return json;
-  } catch (error) {
-    console.error(error.message);
-    return null;
   }
 }
 
