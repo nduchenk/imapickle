@@ -1,7 +1,7 @@
 "use strict";
-
+const NUMBER_OF_COLUMNS_IN_A_ROW = 5;
 const CHARACTERS_TABLE = new CharactersTable(
-  20 /*columns*/,
+  NUMBER_OF_COLUMNS_IN_A_ROW,
   Character /*cell constructor*/
 );
 
