@@ -14,6 +14,7 @@
 
   async function getJsonData(url) {
     try {
+      console.info(`GET request to: ${url}`);
       const response = await fetch(url);
 
       if (!response.ok) {

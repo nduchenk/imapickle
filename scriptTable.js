@@ -31,9 +31,11 @@
       return;
     }
 
+    const current_length = self.content.length;
+
     for (let i = 0; i != data.length; ++i) {
       let character = data[i];
-      let cell = self.content[i];
+      let cell = self.content[current_length + i];
       let characterId = character.id;
       if (characterId === null || characterId === undefined) {
         console.error("Character `id` is: ", typeof characterId);
