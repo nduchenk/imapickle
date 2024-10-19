@@ -11,6 +11,15 @@
   //       };
   //     }),
   //   };
+  const REST_DATA_SOURCE = "https://rickandmortyapi.com/api/character";
+
+  async function getPage(pageNumber) {
+    return getJsonData(REST_DATA_SOURCE + `/?page=${pageNumber}`);
+  }
+
+  async function getCharacter(characterId) {
+    return getJsonData(REST_DATA_SOURCE + `/${characterId}`);
+  }
 
   async function getJsonData(url) {
     try {
@@ -29,5 +38,7 @@
     }
   }
 
+  global.getPage = getPage;
   global.getJsonData = getJsonData;
+  global.getCharacter = getCharacter;
 })(window);

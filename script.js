@@ -24,12 +24,13 @@ const CHARACTERS_TABLE = new CharactersTable(
     const charactersTableContainer = document.getElementById(
       "charactersTableContainer"
     );
+
     characterDescriptionContainer.style.display = "none";
     charactersTableContainer.style.display = "block";
   });
 })();
 
-getJsonData(REST_DATA_SOURCE).then((response) => {
+getPage(CHARACTERS_TABLE.getNextPageNumber()).then((response) => {
   const results = response["results"];
   CHARACTERS_TABLE.updateCells(results);
 });
@@ -45,7 +46,7 @@ window.addEventListener("scroll", () => {
 
     // + 1 co we ceil to upper bound
     if (Math.ceil(scrollPosition) + 1 >= tableHeight) {
-      getJsonData(REST_DATA_SOURCE).then((response) => {
+      getPage(CHARACTERS_TABLE.getNextPageNumber()).then((response) => {
         const results = response["results"];
         CHARACTERS_TABLE.updateCells(results);
       });
