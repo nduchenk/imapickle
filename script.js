@@ -1,7 +1,7 @@
 "use strict";
-
+const NUMBER_OF_COLUMNS_IN_A_ROW = 4;
 const CHARACTERS_TABLE = new CharactersTable(
-  20 /*columns*/,
+  NUMBER_OF_COLUMNS_IN_A_ROW,
   Character /*cell constructor*/
 );
 
@@ -24,12 +24,34 @@ const CHARACTERS_TABLE = new CharactersTable(
     const charactersTableContainer = document.getElementById(
       "charactersTableContainer"
     );
+
     characterDescriptionContainer.style.display = "none";
     charactersTableContainer.style.display = "block";
   });
 })();
 
-getJsonData(REST_DATA_SOURCE).then((response) => {
+getPage(CHARACTERS_TABLE.getNextPageNumber()).then((response) => {
   const results = response["results"];
   CHARACTERS_TABLE.updateCells(results);
 });
+
+window.addEventListener("scroll", () => {
+  const charactersTableContainer = document.getElementById(
+    "charactersTableContainer"
+  );
+
+  if (charactersTableContainer.style.display !== "none") {
+    const tableHeight = charactersTableContainer.scrollHeight;
+    const scrollPosition = window.scrollY + window.innerHeight;
+
+    // + 1 co we ceil to upper bound
+    if (Math.ceil(scrollPosition) + 1 >= tableHeight) {
+      getPage(CHARACTERS_TABLE.getNextPageNumber()).then((response) => {
+        const results = response["results"];
+        CHARACTERS_TABLE.updateCells(results);
+      });
+    }
+  }
+});
+
+// TODO: figure out what is scrollHeight, scrollY, innerHeight

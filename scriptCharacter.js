@@ -149,7 +149,7 @@
           return;
         }
 
-        getJsonData(REST_DATA_SOURCE + `/${characterId}`).then((jsonData) => {
+        getCharacter(characterId).then((jsonData) => {
           // set new character description
           const characterDescriptionContainer = document.getElementById(
             "characterDescriptionContainer"

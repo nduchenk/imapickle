@@ -15,6 +15,7 @@
     this.cell_constructor = cell_constructor;
     this.columns_num = columns_num;
     this.current_rows_num = 0;
+    this.current_max_page_loaded = 0;
 
     const table = document.createElement("table");
     table.classList.add(CLASS_TABLE);
@@ -22,6 +23,14 @@
     this.node = table;
   }
 
+  CharactersTable.prototype.getNextPageNumber = function (max_page) {
+    let self = this;
+    return self.current_max_page_loaded + 1;
+  };
+  CharactersTable.prototype.getCurrentMaxPageLoaded = function () {
+    let self = this;
+    return self.current_max_page_loaded;
+  };
   CharactersTable.prototype.updateCells = function (data) {
     // will add new cells if can't fit into existing.
     let self = this;
@@ -33,42 +42,50 @@
 
     for (let i = 0; i != data.length; ++i) {
       let character = data[i];
-      let cell = self.content[i];
       let characterId = character.id;
       if (characterId === null || characterId === undefined) {
-        console.error("Character `id` is: ", typeof characterId);
+        console.error(`Character id is: ${typeof characterId}`);
         continue;
       }
 
-      // create new cell in table
-      if (cell === undefined) {
-        let current_row = null;
-        // check if need to create a new row!
-        if (self.current_rows_num * self.columns_num <= self.content.length) {
-          const new_row = createRow();
-          self.node.appendChild(new_row);
-          self.current_rows_num += 1;
-          current_row = new_row;
-        } else {
-          current_row = Array.from(
-            self.node.getElementsByClassName(CLASS_ROW)
-          ).at(-1);
+      let cell = self.content[self.content.length + i];
+
+      try {
+        // create new cell in table
+        if (cell === undefined) {
+          let current_row = null;
+          // check if need to create a new row!
+          if (self.current_rows_num * self.columns_num <= self.content.length) {
+            const new_row = createRow();
+            self.node.appendChild(new_row);
+            self.current_rows_num += 1;
+            current_row = new_row;
+          } else {
+            current_row = Array.from(
+              self.node.getElementsByClassName(CLASS_ROW)
+            ).at(-1);
+          }
+
+          const newCell = new self.cell_constructor();
+          current_row.appendChild(newCell.createCharacterNode());
+          cell = newCell;
+          self.content.push(cell);
         }
 
-        const newCell = new self.cell_constructor();
-        current_row.appendChild(newCell.createCharacterNode());
-        cell = newCell;
-        self.content.push(cell);
+        cell.setCharacterProfile(
+          characterId,
+          character.name,
+          character.species,
+          character.status,
+          character.image
+        );
+      } catch {
+        console.error(`Failed to set character with Id ${characterId}`);
+        continue;
       }
-
-      cell.setCharacterProfile(
-        characterId,
-        character.name,
-        character.species,
-        character.status,
-        character.image
-      );
     }
+
+    self.current_max_page_loaded += 1;
   };
 
   global.CharactersTable = CharactersTable;
