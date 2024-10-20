@@ -4,6 +4,7 @@ const CHARACTERS_TABLE = new CharactersTable(
   NUMBER_OF_COLUMNS_IN_A_ROW,
   Character /*cell constructor*/
 );
+var SCROLL_POSITION = window.scrollY;
 
 // attach table to its parent node.
 (function () {
@@ -27,6 +28,7 @@ const CHARACTERS_TABLE = new CharactersTable(
 
     characterDescriptionContainer.style.display = "none";
     charactersTableContainer.style.display = "block";
+    window.scrollTo(0, SCROLL_POSITION);
   });
 })();
 
@@ -35,23 +37,35 @@ getPage(CHARACTERS_TABLE.getNextPageNumber()).then((response) => {
   CHARACTERS_TABLE.updateCells(results);
 });
 
-window.addEventListener("scroll", () => {
-  const charactersTableContainer = document.getElementById(
-    "charactersTableContainer"
-  );
+window.addEventListener(
+  "scroll",
+  debounce(() => {
+    const charactersTableContainer = document.getElementById(
+      "charactersTableContainer"
+    );
 
-  if (charactersTableContainer.style.display !== "none") {
-    const tableHeight = charactersTableContainer.scrollHeight;
-    const scrollPosition = window.scrollY + window.innerHeight;
+    if (charactersTableContainer.style.display !== "none") {
+      SCROLL_POSITION = window.scrollY;
+      const tableHeight = charactersTableContainer.scrollHeight;
+      const maxScrollPosition = SCROLL_POSITION + window.innerHeight;
 
-    // + 1 co we ceil to upper bound
-    if (Math.ceil(scrollPosition) + 1 >= tableHeight) {
-      getPage(CHARACTERS_TABLE.getNextPageNumber()).then((response) => {
-        const results = response["results"];
-        CHARACTERS_TABLE.updateCells(results);
-      });
+      // + 1 co we ceil to upper bound
+      if (Math.ceil(maxScrollPosition) + 1 >= tableHeight) {
+        getPage(CHARACTERS_TABLE.getNextPageNumber()).then((response) => {
+          const results = response["results"];
+          CHARACTERS_TABLE.updateCells(results);
+        });
+      }
     }
-  }
-});
+  }, 100)
+);
+
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    clearTimeout(timeout); // Clear any previous timeout
+    timeout = setTimeout(() => func.call(this, args), wait);
+  };
+}
 
 // TODO: figure out what is scrollHeight, scrollY, innerHeight
