@@ -32,11 +32,12 @@ CharactersTable.prototype.getCurrentMaxPageLoaded = function () {
   let self = this;
   return self.current_max_page_loaded;
 };
-CharactersTable.prototype.extendCharacters = function (data) {
+CharactersTable.prototype.extendCharacters = function (response) {
   // always extends existing content
   let self = this;
 
-  if (data === null || !(data instanceof Array)) {
+  const data = response["results"];
+  if (!(data instanceof Array)) {
     console.error("Received wrong data type: " + typeof results);
     return;
   }
