@@ -32,8 +32,8 @@ CharactersTable.prototype.getCurrentMaxPageLoaded = function () {
   let self = this;
   return self.current_max_page_loaded;
 };
-CharactersTable.prototype.updateCells = function (data) {
-  // will add new cells if can't fit into existing.
+CharactersTable.prototype.extendCharacters = function (data) {
+  // always extends existing content
   let self = this;
 
   if (data === null || !(data instanceof Array)) {
@@ -42,46 +42,26 @@ CharactersTable.prototype.updateCells = function (data) {
   }
 
   for (let i = 0; i != data.length; ++i) {
-    let character = data[i];
-    let characterId = character.id;
-    if (characterId === null || characterId === undefined) {
-      console.error(`Character id is: ${typeof characterId}`);
-      continue;
-    }
-
-    let cell = self.content[self.content.length + i];
-
     try {
-      // create new cell in table
-      if (cell === undefined) {
-        let current_row = null;
-        // check if need to create a new row!
-        if (self.current_rows_num * self.columns_num <= self.content.length) {
-          const new_row = createRow();
-          self.node.appendChild(new_row);
-          self.current_rows_num += 1;
-          current_row = new_row;
-        } else {
-          current_row = Array.from(
-            self.node.getElementsByClassName(CLASS_ROW)
-          ).at(-1);
-        }
-
-        const newCell = new self.cell_constructor();
-        current_row.appendChild(newCell.createCharacterNode());
-        cell = newCell;
-        self.content.push(cell);
+      // create new cell in table if needed.
+      let current_row = null;
+      // check if need to create a new row!
+      if (self.current_rows_num * self.columns_num <= self.content.length) {
+        const new_row = createRow();
+        self.node.appendChild(new_row);
+        self.current_rows_num += 1;
+        current_row = new_row;
+      } else {
+        current_row = Array.from(
+          self.node.getElementsByClassName(CLASS_ROW)
+        ).at(-1);
       }
 
-      cell.setCharacterProfile(
-        characterId,
-        character.name,
-        character.species,
-        character.status,
-        character.image
-      );
-    } catch {
-      console.error(`Failed to set character with Id ${characterId}`);
+      const newCell = new self.cell_constructor(data[i]);
+      self.content.push(newCell);
+      current_row.appendChild(newCell.node);
+    } catch (err) {
+      console.error(`Failed to set character: ${err}`);
       continue;
     }
   }

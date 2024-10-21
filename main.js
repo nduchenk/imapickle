@@ -38,7 +38,7 @@ var SCROLL_POSITION = window.scrollY;
 
 getPage(CHARACTERS_TABLE.getNextPageNumber()).then((response) => {
   const results = response["results"];
-  CHARACTERS_TABLE.updateCells(results);
+  CHARACTERS_TABLE.extendCharacters(results);
 });
 
 window.addEventListener(
@@ -57,7 +57,7 @@ window.addEventListener(
       if (Math.ceil(maxScrollPosition) + 1 >= tableHeight) {
         getPage(CHARACTERS_TABLE.getNextPageNumber()).then((response) => {
           const results = response["results"];
-          CHARACTERS_TABLE.updateCells(results);
+          CHARACTERS_TABLE.extendCharacters(results);
         });
       }
     }

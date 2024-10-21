@@ -2,24 +2,39 @@
 import { getNextUniqObjectId } from "./globals.js";
 import { getCharacter } from "./data_loader.js";
 
-function Character(characterId, name, species, image_src, image_alt, status) {
-  const CLASS_CELL = "characterCell";
-  const CLASS_CELL_CONTAINER = "characterCellContainer";
-  const CLASS_IMAGE_CONTAINER = "characterImageContainer";
-  const CLASS_IMAGE = "characterAvatar";
-  const CLASS_BUTTON = "characterButton";
-  const CLASS_SPECIES = "characterSpecies";
-  const CLASS_STATUS = "characterStatus";
+const CLASS_CELL = "characterCell";
+const CLASS_CELL_CONTAINER = "characterCellContainer";
+const CLASS_IMAGE_CONTAINER = "characterImageContainer";
+const CLASS_IMAGE = "characterAvatar";
+const CLASS_BUTTON = "characterButton";
+const CLASS_SPECIES = "characterSpecies";
+const CLASS_STATUS = "characterStatus";
 
+// function Character(characterId, name, species, image_src, image_alt, status) {
+function Character(character) {
+  const characterId = character["id"];
+  // validate character id is defined.
+  if (characterId === null || characterId === undefined) {
+    throw Error(`Invalid character id.`);
+  }
+
+  // public:
   // used to set up uniq ids for each element in dom:
   this.objectId = getNextUniqObjectId();
-  this.characterId = characterId || null;
-  this.name = name || "";
-  this.species = species || "";
-  this.image_src = image_src || "";
-  this.image_alt = image_alt || "Placeholder for character Picture";
-  this.status = status || "";
+  this.characterId = characterId;
+  this.name = character.name || "";
+  this.species = character.status || "";
+  this.image_src = character.image || "";
+  this.image_alt =
+    this.image_src === ""
+      ? "Placeholder for character Picture"
+      : "Profile picture of " + this.name;
+  this.status = character.status || "";
+  this.node = null;
+  // to access in functions
+  let self = this;
 
+  // priveleged:
   this.setCharacterProfile = function (
     characterId,
     name,
@@ -28,23 +43,20 @@ function Character(characterId, name, species, image_src, image_alt, status) {
     image_src
   ) {
     // order is important: `setImage` will use `self.name` to set up proper `alt`
-    let self = this;
-    self.setCharacterId(characterId);
-    self.setName(name);
-    self.setSpecies(species);
-    self.setStatus(status);
-    self.setAvatar(image_src);
+    setCharacterId(characterId);
+    setName(name);
+    setSpecies(species);
+    setStatus(status);
+    setAvatar(image_src);
   };
 
-  this.setCharacterId = function (characterId) {
+  // private:
+  let setCharacterId = function (characterId) {
     // Takes any value as `characterId` it is caller responsibility to check characterId;
-    let self = this;
     self.characterId = characterId;
   };
 
-  this.setName = function (name) {
-    let self = this;
-
+  let setName = function (name) {
     if (name === null || name === undefined) {
       console.warn(`Name for id: ${self.characterId} is: ` + typeof name);
       return;
@@ -55,9 +67,7 @@ function Character(characterId, name, species, image_src, image_alt, status) {
     button.innerText = name;
   };
 
-  this.setSpecies = function (species) {
-    let self = this;
-
+  let setSpecies = function (species) {
     if (species === null || species === undefined) {
       console.warn(`Species for id: ${self.characterId} is: ` + typeof species);
       return;
@@ -70,9 +80,7 @@ function Character(characterId, name, species, image_src, image_alt, status) {
     characterSpecies.innerText = species;
   };
 
-  this.setStatus = function (status) {
-    let self = this;
-
+  let setStatus = function (status) {
     if (status === null || status === undefined) {
       console.warn(`Status for id: ${self.characterId} is: ` + typeof status);
       return;
@@ -85,8 +93,7 @@ function Character(characterId, name, species, image_src, image_alt, status) {
     characterStatus.innerText = status;
   };
 
-  this.setAvatar = function (image_src) {
-    let self = this;
+  let setAvatar = function (image_src) {
     if (image_src === null || image_src === undefined) {
       console.warn(
         `Image source for id: ${self.characterId} is: ` + typeof image_src
@@ -102,12 +109,12 @@ function Character(characterId, name, species, image_src, image_alt, status) {
     characterAvatar.alt = "Profile picture of " + self.name;
   };
 
-  this.createCharacterNode = function () {
-    let self = this;
+  // create character cell Node: IIFE
+  (function () {
     // cell
-    const characterCell = document.createElement("td");
-    characterCell.classList.add(CLASS_CELL);
-    characterCell.id = CLASS_CELL + self.objectId;
+    let node = document.createElement("td");
+    node.classList.add(CLASS_CELL);
+    node.id = CLASS_CELL + self.objectId;
     // cell-divcharacterCellContainer
     const characterCellContainer = document.createElement("div");
     characterCellContainer.classList.add(CLASS_CELL_CONTAINER);
@@ -171,10 +178,9 @@ function Character(characterId, name, species, image_src, image_alt, status) {
     characterCellContainer.appendChild(button);
     characterCellContainer.appendChild(status);
     characterCellContainer.appendChild(species);
-    characterCell.appendChild(characterCellContainer);
-
-    return characterCell;
-  };
+    node.appendChild(characterCellContainer);
+    self.node = node;
+  })();
 }
 
 export { Character };
