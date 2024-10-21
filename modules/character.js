@@ -1,5 +1,6 @@
 "use strict";
 import { getNextUniqObjectId } from "./globals.js";
+import { getCharacter } from "./data_loader.js";
 
 function Character(characterId, name, species, image_src, image_alt, status) {
   const CLASS_CELL = "characterCell";
