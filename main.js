@@ -1,4 +1,8 @@
 "use strict";
+import { CharactersTable } from "./modules/table.js";
+import { Character } from "./modules/character.js";
+import { getPage } from "./modules/data_loader.js";
+
 const NUMBER_OF_COLUMNS_IN_A_ROW = 4;
 const CHARACTERS_TABLE = new CharactersTable(
   NUMBER_OF_COLUMNS_IN_A_ROW,
