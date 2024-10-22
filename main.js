@@ -37,8 +37,7 @@ var SCROLL_POSITION = window.scrollY;
 })();
 
 getPage(CHARACTERS_TABLE.getNextPageNumber()).then((response) => {
-  const results = response["results"];
-  CHARACTERS_TABLE.updateCells(results);
+  CHARACTERS_TABLE.extendCharacters(response);
 });
 
 window.addEventListener(
@@ -56,8 +55,7 @@ window.addEventListener(
       // + 1 co we ceil to upper bound
       if (Math.ceil(maxScrollPosition) + 1 >= tableHeight) {
         getPage(CHARACTERS_TABLE.getNextPageNumber()).then((response) => {
-          const results = response["results"];
-          CHARACTERS_TABLE.updateCells(results);
+          CHARACTERS_TABLE.extendCharacters(response);
         });
       }
     }
